@@ -1,5 +1,5 @@
 function getDS()
-	return {DESIGN_WIDTH, DESIGN_HEIGHT}
+	return {480, 800}
 end
 function getVS()
 	return CCDirector:sharedDirector():getVisibleSize()

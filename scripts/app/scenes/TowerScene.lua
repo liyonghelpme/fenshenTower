@@ -24,12 +24,54 @@ function TowerScene:ctor()
 	--local sp = CCSprite:create("sky.png")
 	--sp:addTo(node):pos(240, 240)
 
+	local bgLayer = display.newLayer():addTo(self)
+	centerFull(bgLayer)
+
+
 	local sky = display.newSprite("sky.png")
-	sky:addTo(self):pos(ds[1]/2, ds[2]/2)
-	
+	sky:addTo(bgLayer):pos(ds[1]/2, ds[2]/2)
+
 	--setGLProgram(sky);
-	local vs = getDS()
+	--self.levelList = LevelList.new(self):addTo(bgLayer)
+
+	--[[
+	local initX = 240;
+	local initY = 800-706
+	local offY = 706-597
+
+	local fromY = 810
+
+	for i=1, 20, 1 do
+		local tpos = {initX, initY+offY*(i-1)}
+		local sp = display.newSprite("levelTower.png"):addTo(self):pos(initX, fromY)
+		table.insert(self.allLevels, sp)
+		sp:setOpacity(0)
+		sp:runAction(createSequence({CCDelayTime:create((i-1)*0.2), 
+			createSpawn({CCFadeIn:create(0.1), 
+					CCEaseElastic:create(CCMoveTo:create(0.1, ccp(initX, tpos[2])))
+			  		
+			  })
+		}) )
+		if i == 1 then
+			makeDoor(self, sp)
+		end	
+	end
+	--]]
+
+	local vs = getVS()
+	local sz = sky:getContentSize()
+	local rt = CCRenderTexture:create(sz.width, sz.height)
+	rt:addTo(self):pos(vs.width/2, vs.height/2)
+	rt:beginWithClear(0, 0, 0, 0)
+	bgLayer:visit()
+	rt:endToLua()
+
+	bgLayer:setVisible(false)
+
+	setGLProgram(rt:getSprite())
+
 	
+
 	--[[
 	local images = {
 		normal = "doorOpen.png"
@@ -48,7 +90,7 @@ function TowerScene:ctor()
 	--local bg = display.newSprite("towerBack.png")
 	--bg:addTo(self):pos(ds[1]/2, ds[2]/2)
 	
-	self.levelList = LevelList.new(self):addTo(self)
+	--self.levelList = LevelList.new(self):addTo(self)
 
 	--整个屏幕都是touchLayer 如何在UI组件 和 非UI组建之间进行互相协作呢？ 
 	--通过中立的shadow 组建通知么?
